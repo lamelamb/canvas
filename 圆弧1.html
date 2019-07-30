@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>填充纹理</title>
+</head>
+<body>
+<div id="canvas-warp">
+    <canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 50px auto;">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+</div>
+
+<script>
+    window.onload = function(){
+        var canvas = document.getElementById("canvas");
+        canvas.width = 800;
+        canvas.height = 600;
+		// 获取画笔
+        var context = canvas.getContext("2d");
+         
+		 // false 顺时针 ,true 逆时针 ,默认值 false 
+// 		context.beginPath();
+//         context.arc(100,100,50,0,Math.PI * 1,true);
+//            context.strokeStyle ='red'
+//            context.stroke();
+           
+		      // 这个才是真正的绘制
+//                   context.fillStyle ='red';
+//                   context.fill();
+         // 结束此次绘制,不然会相互覆盖的
+	      //  context.closePath();  
+	       // 绘制矩形 ,圆角效果  
+	     
+		 
+		 // 矩形的线段第一种画法  , 只移动笔尖1次
+// 	     context.moveTo(200,200);
+// 		 context.lineTo(300,200);
+// 		 context.lineTo(300,300);
+// 		 context.lineTo(200,300);
+// 		 context.closePath();
+		 
+		 // 矩形的线段第二种画法 , 多次移动鼻尖作为起点,这里是选取对角线2点, 也可自由选择任何点 绘制 
+// 		  context.moveTo(200,200);
+// 		 context.lineTo(300,200);
+// 		 
+// 		 context.moveTo(200,200);
+// 		 context.lineTo(200,300);
+// 		 
+// 		 context.moveTo(300,300);
+// 		 context.lineTo(200,300);
+// 		 
+// 		 context.moveTo(300,300);
+// 		 context.lineTo(300,200);
+//		 context.closePath();
+
+
+
+      // 我们可以在每次绘制之前加上beginPath()，代表下次绘制的起始之处为beginPath()之后的代码
+	  // 那么 原来只有一个 context.stroke() 就导致 beginPath() 之前的都不绘制了,所以才要
+	  // 多次绘制context.stroke()
+        // 左上角
+		context.strokeStyle ='blue'
+          context.beginPath();
+		  // 圆心x  , 圆心y , 半径 , 起始角（三点钟方向是0deg） 结束角（弧度制） , 顺逆时针False = 顺时针，true = 逆时针
+        context.arc(300,300,200, Math.PI, (Math.PI/2)*3  ,  false);
+        context.moveTo(300,280);
+        context.lineTo(500,280);
+		 context.stroke();
+
+		
+		// 右上角
+// 		context.beginPath();
+//  		context.arc(500,300,20, 0, (Math.PI/2)*3,  true);
+// 		
+// 		context.moveTo(520,300);
+// 		context.lineTo(520,400);
+// 		context.stroke();
+	
+		// 右下角
+// 		context.beginPath();
+// 		context.arc(500,400,20, 0, Math.PI/2, false);
+//         context.moveTo(500,420);
+//         context.lineTo(300,420);
+//         context.stroke();
+
+
+//          context.beginPath();
+//         context.arc(300,400,20, Math.PI/2, Math.PI, false);
+// 		context.moveTo(280,400);
+// 		context.lineTo(280,300);
+//  		context.stroke();
+		
+    }
+</script>
+</body>
+</html>

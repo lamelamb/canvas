@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>基本文本显示</title>
+    <style>
+		body { background: url("../bg3.jpg") repeat; }
+        #canvas { border: 1px solid #aaaaaa; display: block; margin: 50px auto; }
+    </style>
+</head>
+<body>
+<div id="canvas-warp">
+    <canvas id="canvas">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+</div>
+
+<script>
+	// context.font = 
+// "[font-style] [font-variant] [font-weight] 
+// [font-size/line-height] [font-family]"
+    window.onload = function(){
+        var canvas = document.getElementById("canvas");
+        canvas.width = 800;
+        canvas.height = 600;
+        var context = canvas.getContext("2d");
+        context.fillStyle = "#FFF";
+        context.fillRect(0,0,800,600);
+
+        //1. 使用`font`设置字体。
+        context.font = "50px serif";
+        //2. 使用`fillStyle`设置字体颜色,可以使用图案按填充 ,渐变 ,纹理等等
+        context.fillStyle = "#00AAAA";
+        //3. 使用`fillText()`方法显示字体。  ,距离画布左边宽度 , 记录画上边高度
+// 		fillText()与strokeText()的参数表是一样的，接受4个参数，分别是String，x，y与maxlen，
+// 		其中String是指要显示的字符串，之后x与y是指显示的坐标，
+// 		最后一个maxlen是可以缺省的数值型参数，代表显示的最大宽度，单位是像素。
+// 		如果文本的长度超过了这个maxlen，Canvas就会将显示文本横向压缩。通常为了保证字体的美观，我们不设置maxlen。
+        context.fillText("《CANVAS--Draw on the Web》",50,200);
+        
+    };
+</script>
+</body>
+</html>

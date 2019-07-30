@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body style="background: black">
+		
+		<canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 0 auto;">
+		   对不起，您的浏览器只是那时不支持canvas 
+		</canvas>
+
+		<canvas id="offCanvas" style="border: 1px solid #aaaaaa; display: block; margin: 0 auto;">
+			
+		 </canvas>
+	
+		
+		<script>
+			var canvas = document.getElementById("canvas");
+			var offCanvas = document.getElementById("offCanvas");
+			var ctx = offCanvas.getContext("2d");
+			var slider= document.getElementById("scale-range");
+
+			var context = canvas.getContext("2d");
+			var img = new  Image;
+
+
+
+       
+			window.onload = function(){
+				 canvas.width = 500  
+				 canvas.height = 400 
+				 img.src = 'code.jpg'
+
+                 ctx.canvas.width =120;
+				   ctx.canvas.height =120;
+				 var scale = null ;
+                
+
+
+				 img.onload = function (){
+					scale =  {x:img.width/canvas.width ,y:img.height/canvas.height}  ;
+					drawImageWithMagnify( false )
+				 }
+
+
+            // 对 offcanvas 进行裁切，然后将offCanvas 绘制到canvas 中去
+			//  也可以到第二次的canvas 进行裁切，然后装入offCanvas ，然后绘制到画布中去
+             function drawImageWithMagnify( withMagnify ,point  ){
+					
+                    context.clearRect(0,0,canvas.width,canvas.height);
+                    context.drawImage(img, 0,0 ,canvas.width ,canvas.height); // 必须缩放显示图片
+					
+					
+					if(withMagnify){
+						drawOffCanvas(point); // 绘制offcanvas
+						context.drawImage(offCanvas, point.x-60,point.y-60);  // 把offcanvas 当成图片加载到显示canvas 上面
+					}
+					  
+			 }
+
+			 var  withMagnify = false;  // 按住左键
+            canvas.onmousedown = function(e){
+				    var point = winToCanvas( e.clientX , e.clientY);
+					withMagnify = true ;
+					
+					drawOffCanvas(point)
+			}
+
+			canvas.onmousemove = function(e){
+				    var point = winToCanvas( e.clientX , e.clientY);
+					// 只有在按住的情况下才会之放大镜
+					if(withMagnify){
+						drawImageWithMagnify( withMagnify ,point  )
+					}
+					
+					
+			}
+
+			document.onmouseup = function(e){
+				    drawImageWithMagnify( false  )
+					withMagnify = false ;
+			}
+
+
+			 
+			 // 让 offcanvas 呈现出不同的形状 === > clip 裁剪画布
+              function drawOffCanvas(point){
+				    var mr = 60 ;
+				    var sx = point.x*scale.x - mr;
+					var sy = point.y*scale.y - mr;
+					 
+				    ctx.clearRect(0,0,offCanvas.width,offCanvas.height);
+					ctx.save();
+				    ctx.beginPath();
+					ctx.arc(60,60,mr,0,Math.PI*2);
+			         ctx.clip();
+					// drawIamge  是绘制方法 clip 裁剪的影响
+					ctx.drawImage(img,sx,sy,img.width,img.height,0,0,img.width,img.height);
+					ctx.restore();
+			  }
+              
+
+
+
+
+            function winToCanvas( clientX , clientY){
+				     var canvasPos =  canvas.getBoundingClientRect();
+					 return {
+						  x: clientX - canvasPos.left,
+						  y: clientY - canvasPos.top,
+					 }
+			}
+			}
+			 
+
+		
+		</script>
+	</body>
+</html>

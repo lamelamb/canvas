@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 50px auto;"></canvas>
+		<script>
+			var canvas = document.getElementById('canvas');
+			 var context = canvas.getContext('2d');
+			 // 如果不确定  画布的大小,canvas 会讲第一次绘制的大小作为大小 ,后面的因为不在画布上就导致看不到了 
+			 canvas.width = 800;
+			 canvas.height = 600;
+			 // 获取画笔,画布默认是透明的,
+			 var context = canvas.getContext("2d");
+			 context.fillStyle = "#FFF"
+			 context.fillRect(0,0,800,600);
+			 context.beginPath();
+			 
+			 // 重置一下
+			 context.fillStyle="red";
+			 context.fillRect(0, 0, 100, 100); // 默认是黑色
+			 //  context.strokeStyle="red";
+			 context.lineWidth = 15;  // 控制线条的粗细
+			 context.strokeRect(150, 0, 100, 100);
+			 
+			 
+			 
+			 // fillRect 相当于先rect 再 fill , strokeRect 同理
+			 context.lineWidth = 1;
+			 context.strokeStyle ="green"
+			 context.rect(200, 200, 100, 100);
+             context.stroke();
+			 
+		</script>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>绘制圆环</title>
+	</head>
+	<body>
+		<canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 50px auto;">
+		    
+		</canvas>
+	</body>
+	<script>
+		var canvas = document.getElementById("canvas");
+	    canvas.width = 400;
+		canvas.height = 400;
+		 // 获取画笔
+	    var context = canvas.getContext("2d");
+		
+		           context.strokeStyle ='#CECCC6';
+				   context.lineWidth = 2;  // 线条的宽度
+				   
+				   context.arc(200,200,198,0,2*Math.PI,false);
+		           context.stroke();
+				   context.beginPath();
+				   // 重新绘制
+				   context.strokeStyle ='red';
+				   context.arc(200,200,198, Math.PI/2*3,3*Math.PI,false);
+				   context.stroke();
+				   context.beginPath();
+				  
+				    context.strokeStyle ='red';
+				   context.arc(200,200,198, Math.PI/2*3,4*Math.PI,false);
+				   context.stroke();
+				   context.beginPath();
+				  
+				 
+				  
+		
+	</script>
+</html>

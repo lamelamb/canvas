@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>学写一个字</title>
+    <style>
+        #canvas { border: 1px solid #aaa; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<div id="canvas-warp">
+    <canvas id="canvas">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+</div>
+
+<script>
+    
+        var canvas = document.getElementById("canvas");
+        //  canvas 的大小要用js设置，因为使用css 设置的话，只是规定canvas 在html中的大小，而不能同时设置canvas 中的分辨率
+         var canvasWidth = 800;
+        canvas.width = canvasWidth;
+        canvas.height = canvasWidth;
+
+        var context = canvas.getContext("2d");
+        
+        
+          // 绘制米字格
+         function drawGrid(ctx){
+             ctx.save();
+             
+             // 正方形 --- 线宽6，外面一半是3 ,所以留3的间隙
+             ctx.beginPath()
+             ctx.moveTo(3,3)
+             ctx.lineTo(canvasWidth-3,3)
+             ctx.lineTo(canvasWidth-3,canvasWidth-3)
+             ctx.lineTo(3,canvasWidth-3)
+             ctx.closePath()
+            
+
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = "rgb(230,11,9)"
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.moveTo(3,3)
+            ctx.lineTo(canvasWidth-3,canvasWidth-3)
+            ctx.moveTo(canvasWidth-3,3)
+            ctx.lineTo(3,canvasWidth-3)
+
+            ctx.moveTo(3,canvasWidth/2)
+            ctx.lineTo(canvasWidth-3,canvasWidth/2)
+
+            ctx.moveTo(canvasWidth/2,3)
+            ctx.lineTo(canvasWidth/2,canvasWidth-3)
+            ctx.lineWidth = 1;
+
+            ctx.stroke()
+            ctx.restore();  // 此时stokeStyle 之类都回复默认了，但是状态任然在交叉线这一部分
+
+         }
+  
+         drawGrid(context);
+
+       var isMouseDown = false;
+       var lastLoc ;
+        // 鼠标互动
+         canvas.onmousedown =function(e){
+             e.preventDefault()
+             isMouseDown = true;
+             lastLoc = winToCanvas( e.clientX , e.clientY)
+         }
+         canvas.onmouseup =function(e){
+            e.preventDefault()
+            isMouseDown = false;
+            }
+         canvas.onmousemove =function(e){
+            if(!isMouseDown ) return
+            e.preventDefault()
+            var curLoc ;
+            context.beginPath()  // 新一轮绘制之前必须指定状态，否则状态之间叠加，这里表现为上一次的 内部交叉线被重绘
+                curLoc = winToCanvas( e.clientX , e.clientY)
+                context.moveTo(lastLoc.x ,lastLoc.y)
+                context.lineTo(curLoc.x ,curLoc.y)
+                lastLoc = curLoc 
+                context.lineWidth =10
+                context.lineCap = "round"  // 当成粗线条的，线段之间默认连接会产生空隙，所以用这个属性
+                context.lineJoin ="round"
+                context.stroke()
+               
+            }
+        canvas.onmouseout =function(e){
+            e.preventDefault()
+             isMouseDown = false;
+            }
+       
+       // 工具函数
+        function winToCanvas( clientX , clientY){
+				     var canvasPos =  canvas.getBoundingClientRect();
+					 return {
+						  x: Math.round( clientX - canvasPos.left ) ,
+						  y: Math.round( clientY - canvasPos.top )   ,
+					 }
+			}
+
+
+</script>
+</body>
+</html>

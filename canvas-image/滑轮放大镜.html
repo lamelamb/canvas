@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body style="background: black">
+		
+		<canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 0 auto;">
+		   对不起，您的浏览器只是那时不支持canvas 
+		</canvas>
+		<!-- h5 range 控件,设置范围以及最小移动步骤-->
+		<input type="range" id="scale-range"  min="0.5" max="3.0"  step="0.01" value="2" style="margin: 20px auto ;display:block;width:800px;">
+		<script>
+			var canvas = document.getElementById("canvas");
+			var slider= document.getElementById("scale-range");
+
+			var context = canvas.getContext("2d");
+			var img = new  Image;
+
+
+
+        // 思路一对原图像进行放大缩小，然后从原图像裁剪出画布大小的宽高，绘制到画布中去
+        // 思路二 原图像不改变，不断更改目标图像的起点和绘制区域，参数五，dx,dy 正对的是画布起始绘画位置
+			window.onload = function(){
+				 canvas.width = 800  
+				 canvas.height = 600 
+				 img.src = 'a.jpg'
+
+				
+				 img.onload = function (){
+					 
+					drawImageByScale( slider.value )
+					// 滑块控件的mousemove ,是鼠标按下平滑滚动
+					slider.onmousemove = function(){
+						drawImageByScale( slider.value )
+					}
+				
+				
+				 }
+
+             function drawImageByScale(scale ){
+					var iW = img.width*scale;
+					var iH = img.height*scale;  
+                    var dx =  (canvas.width - iW)/2;
+					var dy =  (canvas.height - iH)/2; 
+                    context.clearRect(0,0,canvas.width,canvas.height)
+					// 五参数形式dx,dy de 原点是canvas 画布的左上角 0，0 
+                    context.drawImage(img, dx,dy, iW ,iH )
+					  
+			 }
+
+			}
+			 
+		</script>
+	</body>
+</html>

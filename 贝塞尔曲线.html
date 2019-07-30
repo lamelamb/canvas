@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>绘制折线</title>
+</head>
+<body>
+<div id="canvas-warp">
+    <canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 50px auto;">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+</div>
+
+<script>
+    window.onload = function(){
+        var canvas = document.getElementById("canvas");
+        canvas.width = 800;
+        canvas.height = 600;
+        var context = canvas.getContext("2d");
+
+       context.beginPath();
+			 // 贝塞尔去心啊需要一个起点 ,所以这里用moveTo 提供,如果用lineTo  ,直线接曲线会显得太生硬
+        context.moveTo(0,400); 
+				context.bezierCurveTo(150, 300, 350, 550, 800, 400);
+        context.lineTo(800,600);
+        context.lineTo(0,600);
+				context.closePath();  // 将最后一点和起点连接在一起
+
+        context.lineWidth = 1;
+        context.fillStyle = "red";
+        context.fill();
+
+
+   // 二次贝塞尔曲线
+     context.beginPath();
+     context.moveTo(0,0); // 起点
+     context.quadraticCurveTo(280,120,800,0)
+		
+		 context.lineWidth = 1;
+		 context.strokeStyle = "red";
+		 context.stroke();
+    }
+</script>
+</body>
+</html>
