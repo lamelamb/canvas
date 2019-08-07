@@ -4,45 +4,157 @@
 <head>
 	<meta charset="UTF-8">
 	<title>定点模糊画布效果</title>
+	<style>
+		 .canvas-wrapper{
+			  position: relative;
+			  margin:  0 auto;
+			  overflow: hidden;
+		 }
+		  .canvas-wrapper button{
+			 position: absolute;
+			 bottom: 20px;
+		 }
+		  .canvas-wrapper button:hover{
+		 	 border:1px solid #0000FF;
+		 }
+		 #reset{
+			 left:50px;
+		 }
+		 #show{
+		 	right:80px;
+		 }
+		 #change{
+		 	right:0px;
+		 }
+		 #fimg{
+			  filter:blur(20px);
+		 }
+		 #changeImg{
+			 display: none;
+		 }
+		 #canvas{
+			 position:absolute;
+			 top:0;
+		 }
+		 
+	</style>
 </head>
 
-<body style="background: black">
+<body >
   
-
-	<canvas id="canvas" style="border: 1px solid #aaaaaa; display: block; margin: 0 auto;">
-		对不起，您的浏览器只是那时不支持canvas
-	</canvas>
+    <div class="canvas-wrapper">
+		<img  src="view.jpg"  id="fimg"/>
+		<canvas id="canvas">
+			对不起，您的浏览器只是那时不支持canvas
+		</canvas>
+		<button id="reset">reset</button>
+		<button id="show">show</button>
+		<button id="change">change</button>
+		<input id="changeImg"  value="change"  type="file">
+	</div>
+	
 
 	<script>
-		var canvas = document.getElementById("canvas");
-
-
-		var slider = document.getElementById("scale-range");
-
+		
+		var canvas = document.getElementById("canvas");		
 		var ctx = canvas.getContext("2d");
 		var img = new Image;
-		canvas.width = 800
-		canvas.height = 600
-		// 
-
-		img.src = 'a.jpg'
+		
+		var canvasWidth =  Math.min(800,window.innerWidth)
+		var canvasHeight = Math.min(600,window.innerHeight)
+		canvas.width = canvasWidth
+		canvas.height = canvasHeight
+		
+	   var clipArea ={ x:200 ,y:200,r:50};
+	   initWrapper()
+		img.src = 'view.jpg'
 		img.onload = function () {
-
-			drawImageByFilter()
-
-
+			drawImageFilter(clipArea)
 		}
 
-		function drawImageFilter() {
-
+		function drawImageFilter(clipArea) {
+			
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-			ctx.drawImage(img, 0, 0)
-
-
+            ctx.save()
+			drawPath(clipArea, ctx);
+            // 五参数形式对图片进行了缩放 
+			ctx.drawImage(img, 0, 0,canvas.width, canvas.height)
+            ctx.restore()
 		}
 
-
+      function drawPath(params,ctx){
+		     ctx.beginPath()
+		     ctx.arc(params.x ,params.y, params.r,0 , 2*Math.PI);
+			 ctx.clip();
+	  }
+       function initWrapper(){
+		    var  fimg = document.getElementById('fimg');
+		    var  canvasWrapper = document.querySelector('.canvas-wrapper');
+		    fimg.style.width = canvasWidth +'px';
+		    fimg.style.height = canvasHeight +"px";
+			canvasWrapper.style.width = canvasWidth +'px';
+	   }
+	 
+	 reset.onclick= function (){
+		  clipArea ={ x:400 ,y:300,r:50};
+		  drawImageFilter(clipArea)
+	 }
+	 var rSpreadAnmitation;
+	 show.onclick= function (){
+		    var clipRmax = Math.max(clipArea.x, canvasWidth-clipArea.x ,clipArea.y,canvasHeight -clipArea.y);
+		  rSpreadAnmitation  =  setInterval(function(){
+				 clipArea.r+=5; 
+				 if(  clipArea.r > clipRmax ){
+					 return clearInterval( rSpreadAnmitation );
+				 }
+				  drawImageFilter(clipArea)
+			 },50)
+	 		 
+	 }
+	 
+	  change.onclick= function (){
+	 		  changeImg.click()
+	 }
+	 changeImg.oninput =function(e){ 
+		   if (this.files[0].type.split('/')[0] !=='image')  return alert('必须为图片');
+		    var reader = new FileReader;
+			reader.readAsDataURL(this.files[0]); // 读文本
+			// 好了后,将保存在reader.result 中的内容交给 img 
+			reader.onload = function (){
+				
+				 img.src=  reader.result;
+				 fimg.src = reader.result;
+			}
+	 }
+	 
+	 // 按键检测
+	 document.onkeydown =function(e){
+		  var clipYmax =    canvasHeight - clipArea.r;
+		  var clipXmax =    canvasWidth - clipArea.r;
+		  var clipYmin =    clipArea.r;
+		  var clipXmin =    clipArea.r;
+		  var clipRmax = Math.max(clipArea.x, canvasWidth-clipArea.x ,clipArea.y,canvasHeight -clipArea.y);
+		  var clipRmin = 0;
+		  var kc = e.keyCode;
+		  //上下左右的边界条件  clipArea.r < x <  canvasWidth - clipArea.r ; clipArea.r < y <  canvasHeight - clipArea.r
+		  
+		 
+		  //  左右按键
+		  if(kc ==39  && clipArea.x < clipXmax) clipArea.x+=5;
+		  if(kc ==37  && clipArea.x > clipXmin) clipArea.x-=5
+		  // 上下按键
+		  if(kc ==40 && clipArea.y < clipYmax ) clipArea.y+=5;
+		  if(kc ==38 && clipArea.y > clipYmin) clipArea.y-=5;
+		  
+		   // 放大缩小按键 --动态确定 
+		  if(kc == 187  && clipArea.r < clipRmax) clipArea.r+=5;
+		  if(kc == 189  && clipArea.r > clipRmin) clipArea.r-=5;
+		  
+		   drawImageFilter(clipArea )
+	 }
+	 
+	 
+	 
 	</script>
 </body>
 
